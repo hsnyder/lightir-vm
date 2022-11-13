@@ -1,0 +1,3 @@
+	ldi	r1, 16
+	put	r1
+	stop

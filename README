@@ -1,0 +1,69 @@
+LIGHTIR: lightweight, integer, register-based virtual machine
+-------------------------------------------------------------
+
+Implements a simple virutal machine capable of 64 bit integer math.
+The virtual machine has 8 registers by default, though this is configurable
+up to 16 by defining LIGHTIR_NUM_REGS before importing "virtualmachine.h"
+
+The virtual machine comes with an assembler. Assembly instructions:
+
+M = memory location (label)
+I = immediate argument (positive integer)
+R = register ('r1', 'r2', ...)
+
+	get	R	prompt user for a number, read a number from stdin into R
+	put	R	print the content of the register to stdout
+	ld	R, M	load register with contents of memory location M
+	ldi	R, I	load register with immediate value I
+	st	R, M	store register to memory location M 
+	add	R, M 	add memory location M to register's value
+	sub	R, M	subtract memory location M from register's value
+	mul	R, M	multiply memory location M by register's value
+	div	R, M	divide register's value by memory location M 
+	addi	R, I 	add immediate value I to register's value
+	subi	R, I	subtract immediate value I from register's value
+	muli	R, I	multiply immediate value I by register's value
+	divi	R, I	divide register's value by immediate value I 
+	jp	R, M	jump to location M if register value is > 0
+	jpz	R, M	jump to location M if register value is >= 0
+	jz	R, M	jump to location M if register value is zero
+	jn	R, M	jump to location M if register value is < 0
+	jnz	R, M	jump to location M if register value is <= 0
+	j	R, M	jump to location M
+	nop		no operation
+	stop		return from execution, set program counter out of bounds
+	yield		return from execution, advance program counter 1 instruction
+
+There is also the pseudo-instruction "data", which should be followed by a number
+and reserves space in memory for one int64, initialized by the given number.
+
+- Comments begin with # and proceed until the end of the line.
+- Labels must occur at the start of the line, and must be followed by a colon
+- M must be a label, in all examples above.
+- NOTE: IMMEDIATE VALUES MUST BE POSITIVE! (TODO FIX)
+
+See example.lightr for clarity.
+
+Building:
+
+	cc lightir.c -o lightir
+
+Usage - assembling code:
+
+	./lightir as [assembly_filename] > [bytecode_filename]
+
+
+Usage - disassembling code:
+
+	./lightir disas [bytecode_filename] 
+
+
+Usage - interpreting bytecode:
+
+	./lightir run [bytecode_filename]
+
+
+The runtime components are all contained in the single header file virtualmachine.h,
+so in principle this could be embedded in other programs. Define 
+LIGHTIR_IMPLEMENTATION before including the header file in exactly one .c file.
+
