@@ -102,7 +102,7 @@ const op_t vm_ops[] = {
 	[OP_JZ]    = {OP_JZ,    "jz",    1, ARG_MEM},
 	[OP_JN]    = {OP_JN,    "jn",    1, ARG_MEM},
 	[OP_JNZ]   = {OP_JNZ,   "jnz",   1, ARG_MEM},
-	[OP_J]     = {OP_J,     "j",     1, ARG_MEM},
+	[OP_J]     = {OP_J,     "j",     0, ARG_MEM},
 	[OP_NOP]   = {OP_NOP,   "nop",   0, ARG_NONE},
 	[OP_YIELD] = {OP_YIELD, "yield", 0, ARG_NONE},
 };
