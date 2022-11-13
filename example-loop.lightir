@@ -1,0 +1,101 @@
+#// Four nested for loops
+#
+# for (int x = x0; x < Nx; x+=Sx) // L1
+# for (int y = y0; y < Ny; y+=Sy) // L2
+# for (int z = z0; z < Nz; z+=Sz) // L3
+# for (int w = w0; w < Nw; w+=Sw) // L4
+# 	printf("%i\n", x*Ny*Nz*Nw + y*Nz*Nw + z*Nw + w);
+# 	
+#
+
+	ld	r1, x0
+	j	L1test
+
+L1:
+	ld 	r2, y0
+	j	L2test
+
+L2:		
+	ld	r3, z0
+	j 	L3test
+
+L3:	
+	ld	r4, w0
+	j 	L4test
+
+L4:
+	### LOOP BODY
+	cpy	r6, r1
+	mulm	r6, Ny
+	mulm	r6, Nz
+	mulm	r6, Nw
+
+	cpy	r5, r2
+	mulm	r5, Nz
+	mulm	r5, Nw
+	add	r6, r5
+
+
+	cpy	r5, r3
+	mulm	r5, Nw
+	add	r6, r5
+
+	add	r6, r4
+
+	put	r6
+
+L4inc:	
+	addm	r4, Sw
+
+L4test:
+	cpy	r5, r4
+	subm	r5, Nw
+	jn	r5, L4
+
+
+L3inc:	
+	addm	r3, Sz
+
+L3test:
+	cpy	r5, r3
+	subm 	r5, Nz
+	jn	r5, L3
+
+
+L2inc:
+	addm	r2, Sy
+
+L2test:	
+	cpy	r5, r2
+	subm	r5, Ny
+	jn	r5, L2
+
+
+L1inc:
+	addm	r1, Sx
+
+L1test:
+	cpy	r5, r1
+	subm	r5, Nx
+	jn	r5, L1
+
+	stop
+
+
+### Constants
+
+Nx:	data	1
+Ny:	data	1
+Nz:	data	4
+Nw:	data	4
+
+Sx:	data	1
+Sy:	data	1
+Sz:	data	2
+Sw:	data	2
+
+x0:	data	0
+y0: 	data	0
+z0: 	data	1
+w0: 	data	0
+

@@ -15,7 +15,7 @@ loop:
 	ld      r1, count
 	addi	r1, 1
 	st	r1, count
-	j	r1, loop
+	j	loop
 
 done:
 	ld	r1, sum
