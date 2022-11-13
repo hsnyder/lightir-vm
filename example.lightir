@@ -1,3 +1,31 @@
-	ldi	r1, 16
+# This program asks the user to input integers, until they enter zero, 
+# then, it outputs the sum and average of all the numbers that were entered
+# the division for the average is integer division, so may be inexact...
+
+# We could use multiple registers and not need the 'count' and 'sum'
+# variables, but they're here as an example
+
+	ldi 	r1, 0
+	st	r1, sum
+loop:
+	get	r1
+	jz	r1, done
+	add	r1, sum
+	st	r1, sum
+	ld      r1, count
+	addi	r1, 1
+	st	r1, count
+	j	r1, loop
+
+done:
+	ld	r1, sum
+	put	r1
+	div	r1, count
 	put	r1
 	stop
+
+# There's no stack, so we need placholders for variables, like static vars in C
+count:	data 	0
+sum:	data	0 
+
+
