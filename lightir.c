@@ -454,24 +454,32 @@ assemble (char file[], size_t sz)
 static void
 disassemble (int64_t file[], size_t sz)
 {
-	die("NOT IMPLEMENTED");
-	/*
 	const size_t N_vm_ops = sizeof(vm_ops)/sizeof(vm_ops[0]);
 
 	for (unsigned i = 0; i < sz; i++)
 	{
+
+		int64_t file_op   = file[i] >> 58;
+		int64_t file_reg  = ((file[i] >> 54) & 0x0f)-1;
+		int64_t file_arg  = file[i] & 0x3fffffffffffffull;
+
 		int op;
 		for (op = 0; op < N_vm_ops; op++) {
-			if (file[i] >> 56 == vm_ops[op].opcode) 
+			if (file_op == vm_ops[op].opcode) 
 				break; 
 		}
 
 		if (op == N_vm_ops) {
 			printf("%8u:    ?? <%"PRIi64">\n", i, file[i]);
 		} else {
-			int64_t arg = file[i] & 0x00ffffffffffffffLL;
-			printf("%8u:    %8s  %"PRIi64"\n", i, vm_ops[op].str, arg);
+			if (vm_ops[op].reg && vm_ops[op].arg) 
+				printf("%8u:    %-8s  r%"PRIi64", %"PRIi64"\n", i, vm_ops[op].str, file_reg+1, file_arg);
+			else if (vm_ops[op].reg)
+				printf("%8u:    %-8s  r%"PRIi64"\n", i, vm_ops[op].str, file_reg+1);
+			else if (vm_ops[op].arg)
+				printf("%8u:    %-8s  %"PRIi64"\n", i, vm_ops[op].str, file_arg);
+			else 
+				printf("%8u:    %-8s\n", i, vm_ops[op].str);
 		}
 	}
-	*/
 }

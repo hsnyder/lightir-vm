@@ -114,7 +114,7 @@ vm_regs run (int64_t mem[], size_t sz, vm_regs s)
 		assert(s.pc <= sz);
 
 		int64_t op   = mem[s.pc] >> 58;
-		int64_t reg  = (mem[s.pc] >> 54) & 0x0f;
+		int64_t reg  = ((mem[s.pc] >> 54) & 0x0f)-1;
 		int64_t arg  = mem[s.pc] & 0x3fffffffffffffull;
 		s.pc++;
 
