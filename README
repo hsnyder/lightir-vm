@@ -7,9 +7,9 @@ up to 16 by defining LIGHTIR_NUM_REGS before importing "virtualmachine.h"
 
 The virtual machine comes with an assembler. Assembly instructions:
 
-M = memory location (label)
-I = immediate argument (positive integer)
-R = register ('r1', 'r2', ...)
+  M = memory location (label)
+  I = immediate argument (positive integer)
+  R = register ('r1', 'r2', ...)
 
 	ld	R, M	load register with contents of memory location M
 	ldi	R, I	load register with immediate value I
