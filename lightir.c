@@ -330,7 +330,12 @@ parse_instruction(char **t, int pass)
 				if (vm_ops[u].reg && vm_ops[u].arg) 
 					expect_comma(t);
 
-				if (vm_ops[u].arg == ARG_MEM) 
+				if (vm_ops[u].arg == ARG_REG) {
+					token_t tok = expect_id(t);
+					if(!valid_register(tok.id)) 
+						die("invalid register: %s", tok.id);
+				}
+				else if (vm_ops[u].arg == ARG_MEM) 
 					expect_id(t);
 				else if (vm_ops[u].arg == ARG_IMMEDIATE)
 				       	expect_number(t);
@@ -346,7 +351,11 @@ parse_instruction(char **t, int pass)
 				if (vm_ops[u].reg && vm_ops[u].arg) 
 					expect_comma(t);
 
-				if (vm_ops[u].arg == ARG_MEM) {
+				if (vm_ops[u].arg == ARG_REG) {
+
+					arg = valid_register(expect_id(t).id);
+
+				} else if (vm_ops[u].arg == ARG_MEM) {
 
 					arg = symtab_lookup(expect_id(t).id);
 					if(arg & 0xff00000000000000LL) 
@@ -472,7 +481,9 @@ disassemble (int64_t file[], size_t sz)
 		if (op == N_vm_ops) {
 			printf("%8u:    ?? <%"PRIi64">\n", i, file[i]);
 		} else {
-			if (vm_ops[op].reg && vm_ops[op].arg) 
+			if (vm_ops[op].reg && vm_ops[op].arg == ARG_REG) 
+				printf("%8u:    %-8s  r%"PRIi64", r%"PRIi64"\n", i, vm_ops[op].str, file_reg+1, file_arg);
+			else if (vm_ops[op].reg && vm_ops[op].arg) 
 				printf("%8u:    %-8s  r%"PRIi64", %"PRIi64"\n", i, vm_ops[op].str, file_reg+1, file_arg);
 			else if (vm_ops[op].reg)
 				printf("%8u:    %-8s  r%"PRIi64"\n", i, vm_ops[op].str, file_reg+1);

@@ -15,15 +15,20 @@ R = register ('r1', 'r2', ...)
 	put	R	print the content of the register to stdout
 	ld	R, M	load register with contents of memory location M
 	ldi	R, I	load register with immediate value I
+	cpy	R, R	copy second register to first register
 	st	R, M	store register to memory location M 
-	add	R, M 	add memory location M to register's value
-	sub	R, M	subtract memory location M from register's value
-	mul	R, M	multiply memory location M by register's value
-	div	R, M	divide register's value by memory location M 
-	addi	R, I 	add immediate value I to register's value
-	subi	R, I	subtract immediate value I from register's value
-	muli	R, I	multiply immediate value I by register's value
-	divi	R, I	divide register's value by immediate value I 
+	add	R, R 	first register += second register
+	sub	R, R	first register -= second register
+	mul	R, R	first register *= second register
+	div	R, R	first register /= second register
+	addm	R, M 	register += contents of memory location M
+	subm	R, M	register -= contents of memory location M
+	mulm	R, M	register *= contents of memory location M
+	divm	R, M	register /= contents of memory location M
+	addi	R, I 	register += immediate value
+	subi	R, I	register -= immediate value
+	muli	R, I	register *= immediate value
+	divi	R, I	register /= immediate value
 	jp	R, M	jump to location M if register value is > 0
 	jpz	R, M	jump to location M if register value is >= 0
 	jz	R, M	jump to location M if register value is zero

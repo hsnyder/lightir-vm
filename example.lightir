@@ -10,7 +10,7 @@
 loop:
 	get	r1
 	jz	r1, done
-	add	r1, sum
+	addm	r1, sum
 	st	r1, sum
 	ld      r1, count
 	addi	r1, 1
@@ -20,10 +20,15 @@ loop:
 done:
 	ld	r1, sum
 	put	r1
-	div	r1, count
+	divm	r1, count
 	put	r1
 	stop
 
+# just testing the assembler, execution will never reach this point:
+	cpy	r2, r1
+	nop
+
+# "data segment"...
 # There's no stack, so we need placholders for variables, like static vars in C
 count:	data 	0
 sum:	data	0 

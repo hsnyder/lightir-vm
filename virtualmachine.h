@@ -35,15 +35,20 @@ typedef enum {
 	OP_PUT,
 	OP_LD,
 	OP_LDI,
+	OP_CPY,
 	OP_ST,
-	OP_ADD,
+	OP_ADDM,
 	OP_ADDI,
-	OP_SUB,
+	OP_ADDR,
+	OP_SUBM,
 	OP_SUBI,
-	OP_MUL,
+	OP_SUBR,
+	OP_MULM,
 	OP_MULI,
-	OP_DIV,
+	OP_MULR,
+	OP_DIVM,
 	OP_DIVI,
+	OP_DIVR,
 	OP_JP,
 	OP_JPZ,
 	OP_JZ,
@@ -52,13 +57,17 @@ typedef enum {
 	OP_J,
 	OP_NOP,
 	OP_YIELD,
-	OP_DATA,
+
+	OP_DATA, // if you add instructions, add them BEFORE this
 } opcodes;
+
+_Static_assert(OP_DATA <= (1<<6), "You added too many instructions to the VM!");
 
 typedef enum {
 	ARG_NONE=0,
 	ARG_IMMEDIATE,
 	ARG_MEM,
+	ARG_REG,
 } argtype;
 
 typedef struct {
@@ -74,15 +83,20 @@ const op_t vm_ops[] = {
 	[OP_PUT]   = {OP_PUT,   "put",   1, ARG_NONE},
 	[OP_LD]    = {OP_LD,    "ld",    1, ARG_MEM},
 	[OP_LDI]   = {OP_LDI,   "ldi",   1, ARG_IMMEDIATE},
+	[OP_CPY]   = {OP_CPY,   "cpy",   1, ARG_REG},
 	[OP_ST]    = {OP_ST,    "st",    1, ARG_MEM},
-	[OP_ADD]   = {OP_ADD,   "add",   1, ARG_MEM},
+	[OP_ADDM]  = {OP_ADDM,  "addm",  1, ARG_MEM},
 	[OP_ADDI]  = {OP_ADDI,  "addi",  1, ARG_IMMEDIATE},
-	[OP_SUB]   = {OP_SUB,   "sub",   1, ARG_MEM},
+	[OP_ADDR]  = {OP_ADDR,  "add",   1, ARG_REG},
+	[OP_SUBM]  = {OP_SUBM,  "subm",  1, ARG_MEM},
 	[OP_SUBI]  = {OP_SUBI,  "subi",  1, ARG_IMMEDIATE},
-	[OP_MUL]   = {OP_MUL,   "mul",   1, ARG_MEM},
+	[OP_SUBR]  = {OP_SUBR,  "sub",   1, ARG_REG},
+	[OP_MULM]  = {OP_MULM,  "mulm",  1, ARG_MEM},
 	[OP_MULI]  = {OP_MULI,  "muli",  1, ARG_IMMEDIATE},
-	[OP_DIV]   = {OP_DIV,   "div",   1, ARG_MEM},
+	[OP_MULR]  = {OP_MULR,  "mul",   1, ARG_REG},
+	[OP_DIVM]  = {OP_DIVM,  "divm",  1, ARG_MEM},
 	[OP_DIVI]  = {OP_DIVI,  "divi",  1, ARG_IMMEDIATE},
+	[OP_DIVR]  = {OP_DIVR,  "div",   1, ARG_REG},
 	[OP_JP]    = {OP_JP,    "jp",    1, ARG_MEM},
 	[OP_JPZ]   = {OP_JPZ,   "jpz",   1, ARG_MEM},
 	[OP_JZ]    = {OP_JZ,    "jz",    1, ARG_MEM},
@@ -144,32 +158,47 @@ vm_regs run (int64_t mem[], size_t sz, vm_regs s)
 		case OP_LDI:
 			s.r[reg] = arg;
 			break;
+		case OP_CPY:
+			s.r[reg] = s.r[arg-1];
+			break;
 		case OP_ST:
 			mem[arg] = s.r[reg];
 			break;
-		case OP_ADD:
+		case OP_ADDM:
 			s.r[reg] += mem[arg];
 			break;
 		case OP_ADDI:
 			s.r[reg] += arg;
 			break;
-		case OP_SUB:
+		case OP_ADDR:
+			s.r[reg] += s.r[arg-1];
+			break;
+		case OP_SUBM:
 			s.r[reg] -= mem[arg];
 			break;
 		case OP_SUBI:
 			s.r[reg] -= arg;
 			break;
-		case OP_MUL:
+		case OP_SUBR:
+			s.r[reg] -= s.r[arg-1];
+			break;
+		case OP_MULM:
 			s.r[reg] *= mem[arg];
 			break;
 		case OP_MULI:
 			s.r[reg] *= arg;
 			break;
-		case OP_DIV:
+		case OP_MULR:
+			s.r[reg] *= s.r[arg-1];
+			break;
+		case OP_DIVM:
 			s.r[reg] /= mem[arg];
 			break;
 		case OP_DIVI:
 			s.r[reg] /= arg;
+			break;
+		case OP_DIVR:
+			s.r[reg] /= s.r[arg-1];
 			break;
 		case OP_JP:
 			if (s.r[reg] >  0) s.pc = arg;
