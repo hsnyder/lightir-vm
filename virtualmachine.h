@@ -34,6 +34,8 @@ typedef enum {
 	OP_GET,
 	OP_GETP,
 	OP_PUT,
+	OP_DBGR,
+	OP_DBGM,
 	OP_LD,
 	OP_SET,
 	OP_CPY,
@@ -83,6 +85,8 @@ const op_t vm_ops[] = {
 	[OP_GET]   = {OP_GET,   "get",   1, ARG_NONE},
 	[OP_GETP]  = {OP_GETP,  "getp",  1, ARG_NONE},
 	[OP_PUT]   = {OP_PUT,   "put",   1, ARG_NONE},
+	[OP_DBGR]  = {OP_DBGR,  "dbgr",  0, ARG_NONE},
+	[OP_DBGM]  = {OP_DBGM,  "dbgm",  1, ARG_MEM},
 	[OP_LD]    = {OP_LD,    "ld",    1, ARG_MEM},
 	[OP_SET]   = {OP_SET,   "set",   1, ARG_IMMEDIATE},
 	[OP_CPY]   = {OP_CPY,   "cpy",   1, ARG_REG},
@@ -153,8 +157,22 @@ vm_regs run (int64_t mem[], size_t sz, vm_regs s)
 		case OP_PUT:
 			printf("%"PRIi64"\n", s.r[reg]);
 			break;
+		case OP_DBGR:
+			printf("--- DBGR -----------------------------\n");
+			printf("\tpc\t%"PRIi64"\n", s.pc-1);
+			for (int i = 0; i < LIGHTIR_NUM_REGS; i++) {
+				printf("\tr%i\t%"PRIi64"\n", i+1, s.r[i]);
+			}
+			printf("--------------------------------------\n");
+			break;
+		case OP_DBGM:
+			printf("--- DBGM -----------------------------\n");
+			for (int i = arg; i < arg+s.r[reg]; i++) {
+				printf("\t%i:\t%"PRIi64"\n", i, mem[i]);
+			}
+			printf("--------------------------------------\n");
+			break;
 #endif
-
 		case OP_LD:
 			s.r[reg] = mem[arg];
 			break;

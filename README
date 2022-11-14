@@ -38,12 +38,18 @@ The virtual machine comes with an assembler. Assembly instructions:
 	jnz	R, M	jump to location M if register value is <= 0
 	j	M	jump to location M
 
-	getp	R	prompt user for a number, read a number from stdin into R
-	get	R	read a number from stdin into R (no prompt)
-	put	R	print the content of the register to stdout
 	nop		no operation
 	stop		return from execution, set program counter out of bounds
 	yield		return from execution, advance program counter 1 instruction
+
+  the following instructions use stdio.h and can be disabled by defining 
+  LIGHTIR_DISABLE_STDIO before including virtualmachine.h
+
+	getp	R	prompt user for a number, read a number from stdin into R
+	get	R	read a number from stdin into R (no prompt)
+	put	R	print the content of the register to stdout
+	dbgr		prints value of all registers and the program counter 
+	dbgm	R, M	prints R consecutive integers starting at location M
 
 There is also the pseudo-instruction "data", which should be followed by a number
 and reserves space in memory for one int64, initialized by the given number.
