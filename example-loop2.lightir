@@ -15,7 +15,7 @@
 # for (x=x0*Sx; x<x1*Sx; x+=Sx*Tx)       # change < for > if Tx negative
 #   for (y=y0*Sy; y<y1*Sy; y+=Sy*Ty)     # change < for > if Ty negative
 #     for (z=z0*Sz; z<z1*Sz, z+=Sz*Tz)   # change < for > if Tz negative
-#       for (w=w0*Tz; w<w1*Tz; w+=Tw)    # change < for > if Tw negative
+#       for (w=w0; w<w1; w+=Tw)          # change < for > if Tw negative
 #         print x+y+z+w
 
 
@@ -33,7 +33,7 @@
 	ld	r1, Nw
 	st	r1, Sz
 
-# multiply x0, y0, z0, w0 by strides
+# multiply x0, y0, z0 by strides
 	
 	ld	r1, x0
 	mulm	r1, Sx
@@ -47,12 +47,7 @@
 	mulm	r1, Sz
 	st	r1, z0
 
-	ld	r1, w0
-	mulm	r1, Tw
-	st	r1, w0
-
-
-# multiply x1, y1, z1, w1 by strides
+# multiply x1, y1, z1 by strides
 	
 	ld	r1, x1
 	mulm	r1, Sx
