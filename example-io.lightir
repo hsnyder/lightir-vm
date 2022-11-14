@@ -5,7 +5,7 @@
 # We could use multiple registers and not need the 'count' and 'sum'
 # variables, but they're here as an example
 
-	ldi 	r1, 0
+	set 	r1, 0
 	st	r1, sum
 loop:
 	get	r1

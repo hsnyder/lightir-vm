@@ -34,7 +34,7 @@ typedef enum {
 	OP_GET,
 	OP_PUT,
 	OP_LD,
-	OP_LDI,
+	OP_SET,
 	OP_CPY,
 	OP_ST,
 	OP_ADDM,
@@ -82,7 +82,7 @@ const op_t vm_ops[] = {
 	[OP_GET]   = {OP_GET,   "get",   1, ARG_NONE},
 	[OP_PUT]   = {OP_PUT,   "put",   1, ARG_NONE},
 	[OP_LD]    = {OP_LD,    "ld",    1, ARG_MEM},
-	[OP_LDI]   = {OP_LDI,   "ldi",   1, ARG_IMMEDIATE},
+	[OP_SET]   = {OP_SET,   "set",   1, ARG_IMMEDIATE},
 	[OP_CPY]   = {OP_CPY,   "cpy",   1, ARG_REG},
 	[OP_ST]    = {OP_ST,    "st",    1, ARG_MEM},
 	[OP_ADDM]  = {OP_ADDM,  "addm",  1, ARG_MEM},
@@ -155,7 +155,7 @@ vm_regs run (int64_t mem[], size_t sz, vm_regs s)
 		case OP_LD:
 			s.r[reg] = mem[arg];
 			break;
-		case OP_LDI:
+		case OP_SET:
 			s.r[reg] = arg;
 			break;
 		case OP_CPY:

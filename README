@@ -12,7 +12,7 @@ The virtual machine comes with an assembler. Assembly instructions:
   R = register ('r1', 'r2', ...)
 
 	ld	R, M	load register with contents of memory location M
-	ldi	R, I	load register with immediate value I
+	set	R, I	set register to immediate value I
 	st	R, M	store register to memory location M 
 	cpy	R, R	copy second register to first register
 
