@@ -36,7 +36,7 @@ The virtual machine comes with an assembler. Assembly instructions:
 	jz	R, M	jump to location M if register value is zero
 	jn	R, M	jump to location M if register value is < 0
 	jnz	R, M	jump to location M if register value is <= 0
-	j	R, M	jump to location M
+	j	M	jump to location M
 
 	get	R	prompt user for a number, read a number from stdin into R
 	put	R	print the content of the register to stdout
