@@ -1,0 +1,161 @@
+# 4d array slicing index calculation
+#
+# array shape [Nx, Ny, Nz, Nw]
+#
+# slice [x0:x1:Tx,  y0:y1:Ty,  z0:z1:Tz,  w0:w1:Tw]
+#
+# ---
+#
+# Sx = Ny*Nz*Nw
+# Sy = Nz*Nw
+# Sz = Nw
+#
+# ---
+#
+# for (x=x0*Sx; x<x1*Sx; x+=Sx*Tx)       # change < for > if Tx negative
+#   for (y=y0*Sy; y<y1*Sy; y+=Sy*Ty)     # change < for > if Ty negative
+#     for (z=z0*Sz; z<z1*Sz, z+=Sz*Tz)   # change < for > if Tz negative
+#       for (w=w0*Tz; w<w1*Tz; w+=Tw)    # change < for > if Tw negative
+#         print x+y+z+w
+
+
+# precompute Sx, Sy, Sz
+
+	ld	r1, Ny
+	mulm	r1, Nz
+	mulm	r1, Nw
+	st 	r1, Sx
+
+	ld	r1, Nz
+	mulm	r1, Nw
+	st	r1, Sy
+
+	ld	r1, Nw
+	st	r1, Sz
+
+# multiply x0, y0, z0, w0 by strides
+	
+	ld	r1, x0
+	mulm	r1, Sx
+	st	r1, x0
+
+	ld	r1, y0
+	mulm	r1, Sy
+	st	r1, y0
+
+	ld	r1, z0
+	mulm	r1, Sz
+	st	r1, z0
+
+	ld	r1, w0
+	mulm	r1, Tw
+	st	r1, w0
+
+
+# multiply x1, y1, z1, w1 by strides
+	
+	ld	r1, x1
+	mulm	r1, Sx
+	st	r1, x1
+
+	ld	r1, y1
+	mulm	r1, Sy
+	st	r1, y1
+
+	ld	r1, z1
+	mulm	r1, Sz
+	st	r1, z1
+
+	j	start # skip data section
+
+# data section
+
+x0:	data	0
+y0:	data	0
+z0:	data	1
+w0:	data	0
+
+x1:	data	1
+y1:	data	1
+z1:	data	4
+w1:	data	4
+
+Nx:	data	1
+Ny:	data	1
+Nz:	data	4
+Nw:	data	4
+
+Tx:	data	1
+Ty:	data	1
+Tz:	data	2
+Tw:	data	2
+
+Sx:	data	0	
+Sy:	data	0
+Sz:	data	0
+
+start:
+	ld	r1, x0
+	j	L1test
+
+L1:
+	ld 	r2, y0
+	j	L2test
+
+L2:		
+	ld	r3, z0
+	j 	L3test
+
+L3:	
+	ld	r4, w0
+	j 	L4test
+
+L4:
+	### LOOP BODY
+	set	r6, 0
+	add	r6, r1
+	add	r6, r2
+	add	r6, r3
+	add	r6, r4
+	put 	r6	
+
+L4inc:	
+	addm	r4, Tw
+
+L4test:
+	cpy	r5, r4
+	subm	r5, w1
+	jn	r5, L4
+
+L3inc:	
+	ld	r5, Sz
+	mulm	r5, Tz
+	add	r3, r5
+
+L3test:
+	cpy	r5, r3
+	subm 	r5, z1
+	jn	r5, L3
+
+L2inc:
+	ld	r5, Sy
+	mulm	r5, Ty
+	add	r2, r5
+
+L2test:	
+	cpy	r5, r2
+	subm	r5, y1
+	jn	r5, L2
+
+L1inc:
+	ld	r5, Sx
+	mulm	r5, Tx
+	add	r1, r5
+
+L1test:
+	cpy	r5, r1
+	subm	r5, x1
+	jn	r5, L1
+
+	stop
+
