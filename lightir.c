@@ -152,7 +152,7 @@ lex_eat(char **t) {
 	}
 
 	if (
-		( (**t == '+' || **t == '-') && isdigit(*t[1]) ) 
+		( (**t == '+' || **t == '-') && isdigit((*t)[1]) ) 
 		|| isdigit(**t)
 		
 	   ) {
