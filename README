@@ -8,7 +8,7 @@ up to 16 by defining LIGHTIR_NUM_REGS before importing "virtualmachine.h"
 The virtual machine comes with an assembler. Assembly instructions:
 
   M = memory location (label)
-  I = immediate argument (positive integer, e.g. '644', '0', ...)
+  I = immediate argument (integer, e.g. '-644', '0', ...)
   R = register ('r1', 'r2', ...)
 
 	ld	R, M	load register with contents of memory location M
@@ -57,7 +57,7 @@ and reserves space in memory for one int64, initialized by the given number.
 - Comments begin with # and proceed until the end of the line.
 - Labels must occur at the start of the line, and must be followed by a colon
 - M must be a label, in all examples above.
-- NOTE: IMMEDIATE VALUES MUST BE POSITIVE! (TODO FIX)
+- The magnitude of immediate values is limited to 53 bits.
 
 See example-*.lightir for clarity.
 

@@ -358,14 +358,14 @@ parse_instruction(char **t, int pass)
 				} else if (vm_ops[u].arg == ARG_MEM) {
 
 					arg = symtab_lookup(expect_id(t).id);
-					if(arg & 0xff00000000000000LL) 
+					if(arg & (~0x1fffffffffffffULL)) 
 						die("program too large"); 
 
 				} else if (vm_ops[u].arg == ARG_IMMEDIATE) {
-
 					arg = expect_number(t).num;
-					if(arg & 0xff00000000000000LL) 
-						die("immediate value negative or too large"); 
+					if( ( arg > 0 &&   arg  & (~0x1fffffffffffffULL) ) ||
+					    ( arg < 0 && (~arg) & (~0x1fffffffffffffULL) ) )
+						die("immediate value out of range"); 
 				}	
 
 				state.mem[state.nextmem++] = vm_mkinstr(vm_ops[u].opcode, reg, arg);
@@ -470,7 +470,8 @@ disassemble (int64_t file[], size_t sz)
 
 		int64_t file_op   = file[i] >> 58;
 		int64_t file_reg  = ((file[i] >> 54) & 0x0f)-1;
-		int64_t file_arg  = file[i] & 0x3fffffffffffffull;
+		int64_t file_arg  = file[i] & 0x1fffffffffffffULL;
+		if (file[i] & 1ULL<<53) file_arg = ~file_arg;
 
 		int op;
 		for (op = 0; op < N_vm_ops; op++) {
