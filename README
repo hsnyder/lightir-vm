@@ -67,6 +67,10 @@ Usage - disassembling code:
 
 	./lightir disas [bytecode_filename] 
 
+  Note: there's no data segment or other way to differentiate data from
+instructions. So in the disassembly, data will appear as (possibly garbage)
+instructions. Positive integers (unless absurdly large) usually appear as 'stop'.
+
 
 Usage - interpreting bytecode:
 
