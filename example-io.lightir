@@ -8,7 +8,7 @@
 	set 	r1, 0
 	st	r1, sum
 loop:
-	get	r1
+	getp	r1
 	jz	r1, done
 	addm	r1, sum
 	st	r1, sum

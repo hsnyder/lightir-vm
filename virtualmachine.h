@@ -32,6 +32,7 @@ vm_regs run (int64_t mem[],  size_t sz, vm_regs s);
 typedef enum {
 	OP_STOP = 0,
 	OP_GET,
+	OP_GETP,
 	OP_PUT,
 	OP_LD,
 	OP_SET,
@@ -80,6 +81,7 @@ typedef struct {
 const op_t vm_ops[] = {
 	[OP_STOP]  = {OP_STOP,  "stop",  0, ARG_NONE},
 	[OP_GET]   = {OP_GET,   "get",   1, ARG_NONE},
+	[OP_GETP]  = {OP_GETP,  "getp",  1, ARG_NONE},
 	[OP_PUT]   = {OP_PUT,   "put",   1, ARG_NONE},
 	[OP_LD]    = {OP_LD,    "ld",    1, ARG_MEM},
 	[OP_SET]   = {OP_SET,   "set",   1, ARG_IMMEDIATE},
@@ -140,8 +142,9 @@ vm_regs run (int64_t mem[], size_t sz, vm_regs s)
 			break;
 
 #ifndef LIGHTIR_DISABLE_STDIO
-		case OP_GET:
+		case OP_GETP:
 			printf("enter a number: ");
+		case OP_GET:
 			if (fgets(buf,sizeof(buf),stdin)) 
 				s.r[reg] = atoi(buf);
 			else 

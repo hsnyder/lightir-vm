@@ -38,7 +38,8 @@ The virtual machine comes with an assembler. Assembly instructions:
 	jnz	R, M	jump to location M if register value is <= 0
 	j	M	jump to location M
 
-	get	R	prompt user for a number, read a number from stdin into R
+	getp	R	prompt user for a number, read a number from stdin into R
+	get	R	read a number from stdin into R (no prompt)
 	put	R	print the content of the register to stdout
 	nop		no operation
 	stop		return from execution, set program counter out of bounds
