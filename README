@@ -52,7 +52,7 @@ and reserves space in memory for one int64, initialized by the given number.
 - M must be a label, in all examples above.
 - NOTE: IMMEDIATE VALUES MUST BE POSITIVE! (TODO FIX)
 
-See example.lightr for clarity.
+See example-*.lightr for clarity.
 
 Building:
 
